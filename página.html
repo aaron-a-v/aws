@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineCalifica - Valoraciones de Películas</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-full flex flex-col selection:bg-rose-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-rose-500 to-amber-500 p-2.5 rounded-xl shadow-lg shadow-rose-500/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/>
+                    </svg>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">CineCalifica</span>
+                    <span class="block text-xs text-rose-400 font-medium tracking-wider uppercase">Tus opiniones cuentan</span>
+                </div>
+            </div>
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
+                <a href="#peliculas" class="hover:text-rose-400 transition-colors">Películas</a>
+                <a href="#resenas" class="hover:text-rose-400 transition-colors">Reseñas Guardadas</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section class="relative py-16 overflow-hidden bg-gradient-to-b from-slate-900 via-slate-800/50 to-slate-900 border-b border-slate-800/80">
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#e11d48_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6">
+                    Descubre, Valora y <span class="bg-gradient-to-r from-rose-500 to-amber-400 bg-clip-text text-transparent">Comparte</span>
+                </h1>
+                <p class="max-w-2xl mx-auto text-base sm:text-lg text-slate-400 mb-8">
+                    Explora nuestra selección exclusiva de obras maestras del cine, deja tu puntuación interactiva y consulta las valoraciones de la comunidad en tiempo real.
+                </p>
+                <div class="flex justify-center gap-4">
+                    <a href="#peliculas" class="px-6 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-medium shadow-lg shadow-rose-600/30 transition-all transform hover:-translate-y-0.5">
+                        Ver Películas
+                    </a>
+                    <a href="#resenas" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium border border-slate-700 transition-all">
+                        Filtrar Reseñas
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="peliculas" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Cartelera Destacada</h2>
+                    <p class="text-slate-400 text-sm mt-1">Selecciona una estrella para enviar tu valoración instantánea.</p>
+                </div>
+            
+            </div>
+
+            <!-- Movies Grid -->
+            <div id="movies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Javascript will populate this dynamically -->
+            </div>
+        </section>
+
+        <section id="resenas" class="bg-slate-950/60 border-t border-slate-800/80 py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Historial de Valoraciones</h2>
+                        <p class="text-slate-400 text-sm mt-1">Filtra las opiniones guardadas por película o puntuación.</p>
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="flex flex-wrap gap-3">
+                        <select id="filter-movie" class="bg-slate-900 border border-slate-700 text-slate-300 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-rose-500">
+                            <option value="all">Todas las películas</option>
+                        </select>
+                        <select id="filter-rating" class="bg-slate-900 border border-slate-700 text-slate-300 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-rose-500">
+                            <option value="all">Todas las estrellas</option>
+                            <option value="5">5 Estrellas</option>
+                            <option value="4">4 Estrellas</option>
+                            <option value="3">3 Estrellas</option>
+                            <option value="2">2 Estrellas</option>
+                            <option value="1">1 Estrella</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Reviews Container -->
+                <div id="reviews-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic review items -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-slate-800 border border-slate-700 text-white px-6 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3">
+        <div id="toast-icon" class="text-rose-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <span id="toast-message" class="text-sm font-medium">¡Valoración guardada con éxito!</span>
+    </div>
+
+    <footer class="bg-slate-950 border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+        <p>&copy; 2026 CineCalifica. Diseñado con diseño limpio, Tailwind CSS y JavaScript moderno.</p>
+    </footer>
+
+    <script>
+        // Data of 5 example movies
+        const moviesData = [
+            {
+                id: 1,
+                title: "Inception",
+                year: 2010,
+                director: "Christopher Nolan",
+                synopsis: "Un ladrón que roba secretos corporativos a través del uso de la tecnología de compartir sueños recibe la tarea inversa de implantar una idea en la mente de un CEO.",
+                image: "películas/inception.jpg"
+            },
+            {
+                id: 2,
+                title: "Interstellar",
+                year: 2014,
+                director: "Christopher Nolan",
+                synopsis: "Un equipo de exploradores viaja a través de un agujero de gusano en el espacio en un intento por garantizar la supervivencia de la humanidad.",
+                image: "películas/interestellar.jpg"
+            },
+            {
+                id: 3,
+                title: "The Dark Knight",
+                year: 2008,
+                director: "Christopher Nolan",
+                synopsis: "Cuando la amenaza conocida como el Joker causa estragos y caos en la gente de Gotham, Batman debe aceptar uno de los mayores desafíos psicológicos y físicos.",
+                image: "películas/Dark-knight.jpg"
+            },
+            {
+                id: 4,
+                title: "Parasite",
+                year: 2019,
+                director: "Bong Joon Ho",
+                synopsis: "Toda la familia de Ki-taek está desempleada y se interesa mucho por el estilo de vida y los ingresos de la acaudalada familia Park.",
+                image: "películas/parasite.jpg"
+            },
+            {
+                id: 5,
+                title: "Whiplash",
+                year: 2014,
+                director: "Damien Chazelle",
+                synopsis: "Un joven y prometedor baterista se matricula en un conservatorio de música despiadado donde su sueño de grandeza es guiado por un instructor inflexible.",
+                image: "películas/whiplash.jpg"
+            }
+        ];
+
+        // LocalStorage state initialization
+        let reviews = JSON.parse(localStorage.getItem('cinecalifica_reviews')) || [
+            { id: 101, movieId: 1, movieTitle: "Inception", rating: 5, comment: "Una obra maestra absoluta de la ciencia ficción moderna.", author: "Sofía M.", date: "12 Mar 2026" },
+            { id: 102, movieId: 2, movieTitle: "Interstellar", rating: 5, comment: "La banda sonora de Hans Zimmer es épica y te atrapa por completo.", author: "Carlos G.", date: "10 Mar 2026" },
+            { id: 103, movieId: 3, movieTitle: "The Dark Knight", rating: 4, comment: "Heath Ledger hace el papel de su vida como el Joker.", author: "Elena R.", date: "05 Mar 2026" }
+        ];
+
+        // Temporary storage for active interactive ratings given by user in current session
+        let userRatings = JSON.parse(localStorage.getItem('cinecalifica_userratings')) || {};
+
+        // DOM Elements
+        const moviesGrid = document.getElementById('movies-grid');
+        const reviewsContainer = document.getElementById('reviews-container');
+        const filterMovieSelect = document.getElementById('filter-movie');
+        const filterRatingSelect = document.getElementById('filter-rating');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+
+        // Helper: Calculate average rating for a movie
+        function getAverageRating(movieId) {
+            const movieReviews = reviews.filter(r => r.movieId === movieId);
+            if (movieReviews.length === 0) return { avg: 0, count: 0 };
+            const sum = movieReviews.reduce((acc, curr) => acc + curr.rating, 0);
+            return {
+                avg: (sum / movieReviews.length).toFixed(1),
+                count: movieReviews.length
+            };
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            toastMessage.textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // Render Movies
+        function renderMovies() {
+            moviesGrid.innerHTML = '';
+            moviesData.forEach(movie => {
+                const stats = getAverageRating(movie.id);
+                const currentHover = userRatings[movie.id] || 0;
+
+                const card = document.createElement('div');
+                card.className = "bg-slate-800/60 border border-slate-700/70 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between transition-all duration-300 hover:border-slate-600 hover:shadow-rose-500/5";
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="relative aspect-[3/4] overflow-hidden bg-slate-900">
+                            <img src="${movie.image}" alt="${movie.title}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onerror="this.src='https://placehold.co/600x900/1e293b/ffffff?text=No+Image'">
+                            <div class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md border border-slate-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center space-x-1.5 shadow-lg">
+                                <svg class="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                <span>${stats.avg}</span>
+                                <span class="text-slate-400 font-normal">(${stats.count})</span>
+                            </div>
+                            <div class="absolute bottom-3 left-3 bg-rose-600/90 text-white text-xs font-semibold px-2.5 py-1 rounded-md">
+                                ${movie.year} • ${movie.director}
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">${movie.title}</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6 line-clamp-3">${movie.synopsis}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 pt-0 border-t border-slate-700/50 mt-4 flex flex-col gap-4">
+                        <!-- Interactive Star Rating Component -->
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-medium text-slate-300">Tu valoración:</span>
+                            <div class="flex items-center space-x-1 star-container" data-movie-id="${movie.id}">
+                                ${[1, 2, 3, 4, 5].map(star => `
+                                    <button type="button" class="star-btn p-1 text-slate-600 hover:text-amber-400 focus:outline-none transition-colors" data-value="${star}">
+                                        <svg class="w-6 h-6 ${star <= currentHover ? 'text-amber-400 fill-amber-400' : ''}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Review Form Trigger -->
+                        <button onclick="openReviewPrompt(${movie.id}, '${movie.title}')" class="w-full bg-slate-700/50 hover:bg-rose-600 text-slate-200 hover:text-white text-sm font-medium py-2.5 rounded-xl transition-all border border-slate-600/50 hover:border-transparent flex items-center justify-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            <span>Escribir Opinión</span>
+                        </button>
+                    </div>
+                `;
+                moviesGrid.appendChild(card);
+            });
+
+            setupStarInteractions();
+        }
+
+        // Setup star rating click events
+        function setupStarInteractions() {
+            document.querySelectorAll('.star-container').forEach(container => {
+                const movieId = parseInt(container.getAttribute('data-movie-id'));
+                const buttons = container.querySelectorAll('.star-btn');
+
+                buttons.forEach(btn => {
+                    const val = parseInt(btn.getAttribute('data-value'));
+
+                    btn.addEventListener('click', () => {
+                        userRatings[movieId] = val;
+                        localStorage.setItem('cinecalifica_userratings', JSON.stringify(userRatings));
+                        
+                        // Automatically record a quick 5-star or custom rating review
+                        const movie = moviesData.find(m => m.id === movieId);
+                        const newReview = {
+                            id: Date.now(),
+                            movieId: movie.id,
+                            movieTitle: movie.title,
+                            rating: val,
+                            comment: `Valoración rápida asignada con ${val} estrellas desde la tarjeta.`,
+                            author: "Usuario Anónimo",
+                            date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+                        };
+                        reviews.unshift(newReview);
+                        localStorage.setItem('cinecalifica_reviews', JSON.stringify(reviews));
+
+                        renderMovies();
+                        renderReviews();
+                        populateFilterDropdown();
+                        showToast(`¡Puntuación de ${val} estrellas guardada para ${movie.title}!`);
+                    });
+                });
+            });
+        }
+
+        // Open custom prompt modal or inline entry for full review
+        window.openReviewPrompt = function(movieId, movieTitle) {
+            const comment = prompt(`Escribe tu comentario u opinión sobre "${movieTitle}":`);
+            if (comment === null) return; // cancelled
+            
+            let ratingInput = prompt("¿Qué puntuación del 1 al 5 le das?", "5");
+            let rating = parseInt(ratingInput);
+            if (isNaN(rating) || rating < 1 || rating > 5) {
+                rating = 5; // default fallback
+            }
+
+            let author = prompt("Tu nombre o apodo:", "Cinéfilo Invitado");
+            if (!author) author = "Anónimo";
+
+            const newReview = {
+                id: Date.now(),
+                movieId: movieId,
+                movieTitle: movieTitle,
+                rating: rating,
+                comment: comment || "Sin comentarios adicionales.",
+                author: author,
+                date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+            };
+
+            reviews.unshift(newReview);
+            userRatings[movieId] = rating;
+            localStorage.setItem('cinecalifica_reviews', JSON.stringify(reviews));
+            localStorage.setItem('cinecalifica_userratings', JSON.stringify(userRatings));
+
+            renderMovies();
+            renderReviews();
+            populateFilterDropdown();
+            showToast("¡Tu reseña completa ha sido publicada!");
+        }
+
+        // Populate movie filter dropdown options
+        function populateFilterDropdown() {
+            filterMovieSelect.innerHTML = '<option value="all">Todas las películas</option>';
+            moviesData.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.id;
+                opt.textContent = m.title;
+                filterMovieSelect.appendChild(opt);
+            });
+        }
+
+        // Render Reviews based on filters
+        function renderReviews() {
+            const selectedMovie = filterMovieSelect.value;
+            const selectedRating = filterRatingSelect.value;
+
+            const filtered = reviews.filter(r => {
+                const matchMovie = selectedMovie === 'all' || r.movieId.toString() === selectedMovie;
+                const matchRating = selectedRating === 'all' || r.rating.toString() === selectedRating;
+                return matchMovie && matchRating;
+            });
+
+            reviewsContainer.innerHTML = '';
+
+            if (filtered.length === 0) {
+                reviewsContainer.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-500 bg-slate-900/30 rounded-2xl border border-slate-800">
+                        <svg class="w-12 h-12 mx-auto mb-3 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                        <p class="text-base font-medium text-slate-400">No se encontraron reseñas con los filtros seleccionados.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(rev => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-md flex flex-col justify-between transition-all hover:border-slate-700";
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-md">
+                                ${rev.movieTitle}
+                            </span>
+                            <span class="text-xs text-slate-500">${rev.date}</span>
+                        </div>
+                        <div class="flex items-center space-x-1 mb-3">
+                            ${[1, 2, 3, 4, 5].map(s => `
+                                <svg class="w-4 h-4 ${s <= rev.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-700'}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            `).join('')}
+                        </div>
+                        <p class="text-slate-300 text-sm italic mb-6">"${rev.comment}"</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-800 text-xs text-slate-400">
+                        <span class="font-medium text-slate-300">${rev.author}</span>
+                        <button onclick="deleteReview(${rev.id})" class="text-slate-500 hover:text-rose-400 transition-colors" title="Eliminar reseña">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
+                `;
+                reviewsContainer.appendChild(card);
+            });
+        }
+
+        // Delete review function
+        window.deleteReview = function(id) {
+            reviews = reviews.filter(r => r.id !== id);
+            localStorage.setItem('cinecalifica_reviews', JSON.stringify(reviews));
+            renderMovies();
+            renderReviews();
+            showToast("Reseña eliminada correctamente.");
+        }
+
+        // Event listeners for filters
+        filterMovieSelect.addEventListener('change', renderReviews);
+        filterRatingSelect.addEventListener('change', renderReviews);
+
+        // Initial load
+        window.onload = function() {
+            populateFilterDropdown();
+            renderMovies();
+            renderReviews();
+        };
+    </script>
+</body>
+</html>
